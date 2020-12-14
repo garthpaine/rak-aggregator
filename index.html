@@ -2,7 +2,9 @@
 <head>
 <script>
 var url = 'https://raksensors.data.thethingsnetwork.org/api/v2/query?last=600s' 
-let promise = fetch(url, {
+
+/*
+   let promise = fetch(url, {
   method: "GET", // POST, PUT, DELETE, etc.
   headers: {
     // the content type header value is usually auto-set
@@ -24,6 +26,27 @@ let promise = fetch(url, {
   signal: undefined, // AbortController to abort request
   window: window // null
 });
+
+
+fetch(url, {
+   method: 'get',
+   headers: new Headers({
+    "Accept": "application/json",
+    "Authorization":"key ttn-account-v2.jNNxl6FFP5WrkPqxEpY-HH70L1BcW8LAsXGGFhYA3yQ"
+   })
+ });
+
+*/
+
+
+fetch("https://raksensors.data.thethingsnetwork.org/api/v2/query?last=600s", {
+  headers: {
+    Accept: "application/json",
+    Authorization: "key ttn-account-v2.jNNxl6FFP5WrkPqxEpY-HH70L1BcW8LAsXGGFhYA3yQ"
+  },
+  mode:"no-cors"
+})
+
 </script>
 </head>
 <body>
