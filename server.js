@@ -54,6 +54,7 @@ setInterval(function(){
 		 if(body.toString().length > 0){
 		    var dps = JSON.parse(body.toString());
 		    for(var i = 0; i < dps.length; i++){
+			    dps[i].time = new Date(dps[i].time).getTime();
 		    	db.collection("data").insert(dps[i], function(err, result){
 				console.log("added");
 			});
