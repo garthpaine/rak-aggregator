@@ -6,6 +6,8 @@ var methodOverride = require('method-override');
 var hostname = process.env.HOSTNAME || 'localhost';
 var port = 1234;
 const https = require("https");
+const MS = require("mongoskin");
+const db = MS.db("mongodb://localhost:27017/rakdata")
 
 app.get("/", function (req, res) {
     res.redirect("index.html")
@@ -49,6 +51,14 @@ setInterval(function(){
 	    res.on("end", function() {
 		var body = Buffer.concat(chunks);
 		console.log(body.toString());
+		 if(body.toString().length > 0){
+		    var dps = JSON.parse(body.toString());
+		    for(var i = 0; i < dps.length; i++){
+		    	db.collection("data").insert(dps[i], function(err, result){
+				console.log("added");
+			});
+		    }
+		}
 	    });
 
 	});
