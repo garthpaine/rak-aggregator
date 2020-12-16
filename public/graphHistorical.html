@@ -12,9 +12,7 @@ var chart;
 var lastAddedTS = 0;
 function start()
 {
-  document.getElementById("datetimeSelect").value = getTSInFormat(new Date().getTime());
-	flatpickr("#datetimeSelect", { enableTime: true,
-    dateFormat: "Y-m-d H:i"});
+	  document.getElementById("datetimeSelect").value = getTSInFormat(new Date().getTime()).split("T")[0];
     getDataFromServer();
 }
 
@@ -26,8 +24,15 @@ function getTSInFormat(t)
 
 function getDataFromServer(){
 
-  var to = new Date(document.getElementById("datetimeSelect").value).getTime();
-  var from = to -  parseInt(document.getElementById("duration").value) * 60 * 1000;
+  var selDate = new Date(document.getElementById("datetimeSelect").value)
+	console.log(selDate.getDate())
+	selDate.setHours(23);
+	selDate.setMinutes(59);
+	var to = selDate.getTime() + 24*60*60*1000;
+	selDate.setHours(0);
+	selDate.setMinutes(0);
+	var from = selDate.getTime() + 24*60*60*1000;
+	console.log(from,to)
 
 	var url = "./getData?from=" + from +"&to=" + to;
 	var callback = function(data){
@@ -67,14 +72,9 @@ function getDataFromServer(){
 </head>
 
 <body style='text-align:center; font-family:Helvetica' onload='start()'>
-	<h1> Weather Historical Data </h1>
+	<h1> Historical Data </h1>
 
-	<input id='datetimeSelect' type='text' onchange='getDataFromServer()'>
-	<select id='duration' onchange='getDataFromServer()'>
-		<option value='10'> last 10 mins </option>
-		<option value='30'> last 30 mins </option>
-		<option value='60'> last hour </option>
-	</select>
+		<input id='datetimeSelect' type='date' onchange='getDataFromServer()'>
 	<div id='data'></div>
 
 </body>
