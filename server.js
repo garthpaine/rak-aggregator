@@ -13,6 +13,18 @@ app.get("/", function (req, res) {
     res.redirect("index.html")
 });
 
+app.get("/getData", function (req, res) {
+  var from = parseInt(req.query.from);
+  var to = parseInt(req.query.to);
+  var device_id = req.query.id
+	console.log(device_id);
+  console.log(to-from);
+  db.collection("data").find({device_id:device_id,time:{$gt:from, $lt:to}}).sort({time:-1}).toArray(function(err, result){
+    res.send(JSON.stringify(result));
+  });
+});
+
+
 app.use(
   express.urlencoded({
     extended: true
@@ -50,7 +62,6 @@ setInterval(function(){
 
 	    res.on("end", function() {
 		var body = Buffer.concat(chunks);
-		console.log(body.toString());
 		 if(body.toString().length > 0){
 		    var dps = JSON.parse(body.toString());
 		    for(var i = 0; i < dps.length; i++){

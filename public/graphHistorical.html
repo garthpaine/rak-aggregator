@@ -10,9 +10,13 @@
 <script>
 var chart;
 var lastAddedTS = 0;
+var deviceID
 function start()
 {
-	  document.getElementById("datetimeSelect").value = getTSInFormat(new Date().getTime()).split("T")[0];
+	deviceID = window.location.hash.replace("#","")
+	document.getElementById("datetimeSelect").value = getTSInFormat(new Date().getTime()).split("T")[0];
+	document.getElementById("title").innerHTML = deviceID;
+
     getDataFromServer();
 }
 
@@ -34,15 +38,16 @@ function getDataFromServer(){
 	var from = selDate.getTime() + 24*60*60*1000;
 	console.log(from,to)
 
-	var url = "./getData?from=" + from +"&to=" + to;
+	var url = "./getData?id=" + deviceID + "&from=" + from +"&to=" + to;
 	var callback = function(data){
 		var obj = JSON.parse(data);
-		var columns = [["x"],["Temperature"],["Humidity"]]
+		var columns = [["x"],["Temperature"],["Humidity"], ["Pressure"]]
 		for(var i = 0; i < obj.length; i++){
 			var timestamp = parseInt(obj[i].ts || obj[i].time);
 			columns[0].push(getTSInFormat(timestamp));
-			columns[1].push(obj[i].t || 0);
-			columns[2].push(obj[i].h || 0);
+			columns[1].push(obj[i].temp || 0);
+			columns[2].push(obj[i].humidity || 0);
+			columns[3].push(obj[i].pressure || 0);
 			lastAddedTS = timestamp;
 		}
 		chart = c3.generate({
@@ -72,7 +77,7 @@ function getDataFromServer(){
 </head>
 
 <body style='text-align:center; font-family:Helvetica' onload='start()'>
-	<h1> Historical Data </h1>
+	<h1 id='title'> Historical Data </h1>
 
 		<input id='datetimeSelect' type='date' onchange='getDataFromServer()'>
 	<div id='data'></div>
